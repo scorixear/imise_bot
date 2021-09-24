@@ -71,7 +71,7 @@ function getNumberFromEmoji(emoji) {
  * @param {resolveCallback} method function to execute
  * @param {*} additionalArguments additional arguments, that will be passed through to the method
  */
-function resolveWithReaction(msg, messageString, options, join, method, additionalArguments) {
+async function resolveWithReaction(msg, messageString, options, join, method, additionalArguments) {
   const reactEmojis = [];
   let commandList;
   if (options && options.length > 0) {
@@ -102,16 +102,17 @@ function resolveWithReaction(msg, messageString, options, join, method, addition
     });
   }
 
-  messageHandler.sendRichText(msg, language.general.error, categories).then((m) => {
+  const message = await messageHandler.sendRichText(msg, language.general.error, categories).then((m) => {
     reactEmojis.forEach((e)=>m.react(e));
     return m;
-  }).then((m) => {
-    m.awaitReactions((react, user) => reactEmojis.includes(react.emoji.name) && user.id === msg.author.id,
-        {max: 1, time: 60000, errors: ['time']}).then((collected) => {
-      const reaction = collected.first();
-      method(options[getNumberFromEmoji(reaction.emoji.name)], msg, additionalArguments);
-    });
   });
+  const collected = await message.awaitReactions({
+    filter: (react, user) => reactEmojis.includes(react.emoji.name) && user.id === msg.author.id,
+    max: 1,
+    time: 60000,
+  });
+  const reaction = collected.first();
+  method(options[getNumberFromEmoji(reaction.emoji.name)], msg, additionalArguments);
 }
 
 export default {

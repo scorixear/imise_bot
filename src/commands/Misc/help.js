@@ -21,13 +21,11 @@ export default class Help extends Command {
    * @param {*} params added parameters and their argument
    */
   executeCommand(args, msg, params) {
-    console.log('before super');
     try {
       super.executeCommand(args, msg, params);
     } catch (err) {
       return;
     }
-    console.log('in help');
     if (args && args.length > 0) {
       const command = cmdHandler.commands.find((v) => v.command == args[0]);
       if (command) {
@@ -96,8 +94,6 @@ export default class Help extends Command {
         inline: true,
       });
     });
-
-    console.log('sending rich text');
     msgHandler.sendRichText(msg, 'Help Info', embededCategories, 0x616161);
   }
 }
