@@ -6,7 +6,7 @@ import Discord from 'discord.js';
  * @param {{msg: Discord.Message, title: string, categories: Array<{title: string, text: string, inline: boolean}>, color: number, image: string, description: string, thumbnail: string, url: string}} param0
  * @return {Promise<(Discord.Message|Array<Discord.Message>)>}
  */
-function sendRichTextDefault({
+async function sendRichTextDefault({
   msg,
   title,
   categories,
@@ -16,7 +16,7 @@ function sendRichTextDefault({
   thumbnail,
   url,
 }) {
-  return sendRichText(msg, title, categories, color, image, description, thumbnail, url);
+  return await sendRichText(msg, title, categories, color, image, description, thumbnail, url);
 }
 
 /**
@@ -24,7 +24,7 @@ function sendRichTextDefault({
  * @param {{guild: Discord.Guild, channel: Discord.Channel, title: string, categories: Array<{title: string, text: string, inline: boolean}>, color: number, image: string, description: string, thumbnail: string, url: string}} param0
  * @return {Promise<(Discord.Message|Array<Discord.Message>)>}
  */
-function sendRichTextDefaultExplicit({
+async function sendRichTextDefaultExplicit({
   guild,
   channel,
   author,
@@ -36,7 +36,7 @@ function sendRichTextDefaultExplicit({
   thumbnail,
   url,
 }) {
-  return sendRichTextExplicit(guild, channel, author, title, categories, color, image, description, thumbnail, url);
+  return await sendRichTextExplicit(guild, channel, author, title, categories, color, image, description, thumbnail, url);
 }
 
 /**
@@ -53,7 +53,8 @@ function sendRichTextDefaultExplicit({
  * @param {string} url an url
  * @return {Promise<(Discord.Message|Array<Discord.Message>)>}
  */
-function sendRichTextExplicit(guild, channel, author, title, categories, color, image, description, thumbnail, url) {
+async function sendRichTextExplicit(guild, channel, author, title, categories, color, image, description, thumbnail, url) {
+  channel.sendTyping();
   const richText = new Discord.MessageEmbed();
   if (title) {
     richText.setTitle(title);
@@ -83,7 +84,8 @@ function sendRichTextExplicit(guild, channel, author, title, categories, color, 
   }
 
   if (guild && author) {
-    richText.setFooter(guild.member(author).nickname, author.avatarURL());
+    const guildMember = await guild.members.fetch(author);
+    richText.setFooter(guildMember.nickname, author.avatarURL());
   }
 
   richText.setTimestamp(new Date());
@@ -91,7 +93,7 @@ function sendRichTextExplicit(guild, channel, author, title, categories, color, 
     richText.setURL(url);
   }
 
-  return channel.send(richText);
+  return channel.send({embeds: [richText]});
 }
 
 /**
@@ -106,8 +108,8 @@ function sendRichTextExplicit(guild, channel, author, title, categories, color, 
  * @param {url} url
  * @return {Promise<(Discord.Message|Array<Discord.Message>)>}
  */
-function sendRichText(msg, title, categories, color, image, description, thumbnail, url) {
-  return sendRichTextExplicit(msg.guild, msg.channel, msg.author,
+async function sendRichText(msg, title, categories, color, image, description, thumbnail, url) {
+  return await sendRichTextExplicit(msg.guild, msg.channel, msg.author,
       title, categories, color, image, description, thumbnail, url);
 }
 

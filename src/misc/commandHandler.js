@@ -4,7 +4,7 @@ import Fs from 'fs';
 import emojiHandler from './emojiHandler.js';
 import levenshteinDistance from './levenshteinDistance';
 import {Message} from 'discord.js';
-import {dic as language, replaceArgs} from 'languageHandler';
+import {dic as language, replaceArgs} from './languageHandler';
 
 const commandFiles = Fs.readdirSync('./src/commands');
 const commands = [];
@@ -36,13 +36,7 @@ function parseCommand(msg) {
   let args;
   let params;
   // if does not start with prefix, return;
-  if (msg.content[0] == config.playPrefix) {
-    module = commands.find((c)=>c.command.toLowerCase() == 'play');
-    command = 'play';
-    const temp = parseWithoutCommand(msg, msg.content.substring(1));
-    args = temp.args;
-    params = temp.params;
-  } else if (msg.content[0] !== config.botPrefix) return;
+  if (msg.content[0] !== config.botPrefix) return;
   else {
     const temp = parseCommandParams(msg);
     if (!temp) return;

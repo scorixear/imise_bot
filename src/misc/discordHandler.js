@@ -1,6 +1,8 @@
-import Discord from 'discord.js';
+import {Client, Intents} from 'discord.js';
 import sqlHandler from './sqlHandler';
-const client = new Discord.Client();
+const client = new Client({
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER'],
+  intents: [Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILDS]});
 const tempChannels = [];
 
 client.on('voiceStateUpdate', async (newVoice, oldVoice) => {
@@ -9,7 +11,7 @@ client.on('voiceStateUpdate', async (newVoice, oldVoice) => {
 
   if (oldUserChannel != newUserChannel) {
     if (oldUserChannel && tempChannels.includes(oldUserChannel)) {
-      if (oldUserChannel.members.array().length === 0) {
+      if (oldUserChannel.members.size === 0) {
         for (let i = 0; i< tempChannels.length; i++) {
           if (tempChannels[i] === oldUserChannel) {
             tempChannels.splice(i, 1);
@@ -27,11 +29,11 @@ client.on('voiceStateUpdate', async (newVoice, oldVoice) => {
           counter++;
         }
         const channel = await newVoice.guild.channels.create(replacement.replace('$', counter), {
-          type: 'voice',
+          type: 'GUILD_VOICE',
           parent: newUserChannel.parent,
-          permissionOverwrites: newUserChannel.permissionOverwrites,
-          position: newUserChannel.position,
+          position: newUserChannel.position + 1,
         });
+        channel.permissionOverwrites.set(newUserChannel.permissionOverwrites.cache);
         tempChannels.push(channel);
         newVoice.setChannel(channel);
       }

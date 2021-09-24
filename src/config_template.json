@@ -7,6 +7,6 @@
   "dbuser": "username",
   "dbpassword": "password",
   "dbport": "3306",
-  "dbDataBase": "kellerus",
+  "dbDataBase": "imise_bot",
   "version": "1.0.0"
 }
