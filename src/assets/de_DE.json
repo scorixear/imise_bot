@@ -1,7 +1,7 @@
 {
   "commands": {
     "help":{
-      "description": "Gibt eine Liste von Befehlen zurück, welche du benutzen kannst oder zeigt Informationen über spezifische Befehle!",
+      "description": "Gibt eine Liste von Befehlen zurück, welche du benutzen kannst!",
       "error": {
         "unknown": "Der Befehl ist nicht bekannt. Gib `$0help` ein für eine Liste von Befehlen."
       },
@@ -10,10 +10,13 @@
       },
       "success":{
         "type":"Gib `$0<$1> [args]` ein um einen $1 auszuführen!"
+      },
+      "options": {
+        "command": "Der Befehl über den du Hilfe brauchst."
       }
     },
     "addBotChannel": {
-      "description": "Verlinkt ein Voice-Channel zu einem BotChannel.\nBotChannel erstellen weitere Channel beim Joinen.",
+      "description": "Verlinkt ein Voice-Channel zu einem BotChannel.",
       "error": {
         "usageTitle": "Falsche Benutzung",
         "textTitle": "Textchannel ausgewählt",
@@ -24,6 +27,10 @@
       "labels": {
         "success": "Channel konfiguriert",
         "description": "Channel `$0` wurde konfiguriert. Weitere Channels folgen dem Schema `$1`"
+      },
+      "options": {
+        "channel": "Der Kanal der als BotChannel konfiguriert werden soll",
+        "channel_names": "Der String für den Namen der neuen Kanäle"
       }
     },
     "removeBotChannel": {
