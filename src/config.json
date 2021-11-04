@@ -1,5 +1,5 @@
 {
-  "repository": "https://github.com/scorixear/kellerus",
+  "repository": "https://github.com/scorixear/imise_bot",
   "botPrefix": "/",
   "version": "1.0.0",
   "adminRoles": ["unsuspicious Role", "💻Entwickler💻", "👑Monarch👑"]
