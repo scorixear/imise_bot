@@ -1,7 +1,6 @@
 import DiscordHandler from './misc/discordHandler';
-import config from './config';
 import SqlHandler from './misc/sqlHandler';
-import InteractionHandler from './misc/InteractionHandler';
+import InteractionHandler from './misc/interactionHandler';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -28,4 +27,7 @@ process.on('unhandledRejection', (reason) => {
 
 
 sqlHandler.initDB().then(async ()=> {
+  await discordHandler.client.login(process.env.DISCORD_TOKEN);
+  await interactionHandler.Init();
+  console.log('Imise Bot live!')
 });
