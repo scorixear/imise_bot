@@ -1,5 +1,13 @@
 {
   "repository": "https://github.com/scorixear/imise_bot",
   "botPrefix": "/",
+<<<<<<< HEAD
   "version": "1.0.0"
+||||||| b8cf011
+  "version": "1.0.0",
+  "adminRoles": ["unsuspicious Role", "💻Entwickler💻", "👑Monarch👑"]
+=======
+  "version": "1.1.0",
+  "adminRoles": ["unsuspicious Role", "💻Entwickler💻", "👑Monarch👑"]
+>>>>>>> develop
 }
