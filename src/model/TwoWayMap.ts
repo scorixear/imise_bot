@@ -6,7 +6,9 @@ export default class TwoWayMap<K, V>{
     this.reverseMap = new Map();
     for(const key of map.keys()) {
       const value = map.get(key);
-      this.reverseMap.set(value, key);
+      if(value) {
+        this.reverseMap.set(value, key);
+      }
     }
   }
   set(key: K, value: V) {

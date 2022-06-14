@@ -8,9 +8,9 @@ abstract class CommandInteractionHandle {
   public example: string;
   public category: string;
   public usage: string;
-  public id: Record<string, string>;
+  public id?: Record<string, string>;
   public requirePermissions: boolean;
-  public Ready: Promise<any>;
+  public Ready?: Promise<any>;
 
   public slashCommandBuilder: SlashCommandBuilder;
 
@@ -41,15 +41,19 @@ abstract class CommandInteractionHandle {
 
   public async handle(interaction: CommandInteraction) {
     if(this.requirePermissions) {
-      const applicationCommand = (await interaction.guild.commands.fetch()).find(command => command.name === this.command);
+      const guild = interaction.guild;
+      if (guild) {
+        const applicationCommand = (await guild.commands.fetch()).find(command => command.name === this.command);
 
-      if(applicationCommand) {
-        const member = await (interaction.member as GuildMember).fetch();
-        if(member.user.id === process.env.OWNER_ID) {
+        if(applicationCommand) {
+          const member = await (interaction.member as GuildMember).fetch();
+          if(member.user.id === process.env.OWNER_ID) {
+            return;
+          }
           return;
         }
-        return;
       }
+
     }
   }
 }

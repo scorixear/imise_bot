@@ -4,7 +4,8 @@ import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
 import { SlashCommandChannelOption, SlashCommandStringOption } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import messageHandler from '../../misc/messageHandler';
-import { ChannelType } from "discord-api-types";
+import { ChannelType } from "discord-api-types/v10";
+
 
 declare const languageHandler: LanguageHandler;
 declare const sqlHandler: SqlHandler;
@@ -13,7 +14,7 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
   constructor() {
     const commandOptions: any[] = [];
     const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption().setName('channel').setDescription(languageHandler.language.commands.addBotChannel.options.channel).setRequired(true);
-    channelOption.addChannelType(ChannelType.GuildVoice);
+    channelOption.addChannelTypes(ChannelType.GuildVoice);
     commandOptions.push(channelOption);
     commandOptions.push(new SlashCommandStringOption().setName('channel_names').setDescription(languageHandler.language.commands.addBotChannel.options.channel_names).setRequired(true));
     super(
@@ -38,7 +39,7 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
 
     if (!channelNames) {
       interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild,
+        guild: interaction.guild??undefined,
         author: interaction.user,
         title: languageHandler.language.commands.addBotChannel.usageTitle,
         description: this.usage,
@@ -48,7 +49,7 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
     }
     if (!channelNames.includes('$')) {
       interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild,
+        guild: interaction.guild??undefined,
         author: interaction.user,
         title: languageHandler.language.commands.addBotChannel.error.usageTitle,
         description: this.usage,
@@ -57,9 +58,9 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
       return;
     }
 
-    if (!await sqlHandler.saveChannel(channel.id, channelNames)) {
+    if (!await sqlHandler.saveChannel(channel?.id??"", channelNames)) {
       interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild,
+        guild: interaction.guild??undefined,
         author: interaction.user,
         title: languageHandler.language.commands.addBotChannel.error.sqlTitle,
         description: languageHandler.language.commands.addBotChannel.error.sqlDescription,
@@ -69,10 +70,10 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
     }
 
     interaction.reply(await messageHandler.getRichTextExplicitDefault({
-      guild: interaction.guild,
+      guild: interaction.guild??undefined,
       author: interaction.user,
       title: languageHandler.language.commands.addBotChannel.labels.success,
-      description: languageHandler.replaceArgs(languageHandler.language.commands.addBotChannel.labels.description, [channel.name, channelNames]),
+      description: languageHandler.replaceArgs(languageHandler.language.commands.addBotChannel.labels.description, [channel?.name??"", channelNames]),
     }));
   }
 }

@@ -21,10 +21,10 @@ export default class InteractionHandler {
       }
     }
     const commands = this.commandInteractions.map(command => command.slashCommandBuilder.toJSON());
-    const rest = new REST({version: '9'}).setToken(process.env.DISCORD_TOKEN);
+    const rest = new REST({version: '9'}).setToken(process.env.DISCORD_TOKEN??"");
 
     global.discordHandler.getGuilds().forEach(async guild => {
-      await rest.put(Routes.applicationGuildCommands(process.env.CLIENTID, guild.id), {body: commands});
+      await rest.put(Routes.applicationGuildCommands(process.env.CLIENTID??"", guild.id), {body: commands});
       console.log('Successfully registered application command for guild', guild.id);
     })
   }

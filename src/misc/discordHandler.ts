@@ -32,7 +32,7 @@ export default class DiscordHandler {
             }
             const channel = await newVoice.guild.channels.create(replacement.replace('$', counter), {
               type: 'GUILD_VOICE',
-              parent: newUserChannel.parent,
+              parent: newUserChannel.parent??undefined,
               position: newUserChannel.position + 1,
             });
             channel.permissionOverwrites.set(newUserChannel.permissionOverwrites.cache);
