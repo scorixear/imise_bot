@@ -1,8 +1,7 @@
-import cmdHandler from '../../misc/commandHandler.js';
-import msgHandler from '../../misc/messageHandler.js';
-import permHandler from '../../misc/permissionHandler.js';
+import msgHandler from '../../misc/messageHandler';
 import config from '../../config.js';
-import Command from '../command.js';
+import { CommandInteractionHandle } from '../../model/CommandInteractionHandle';
+import { SlashCommandStringOption } from '@discordjs/builders';
 import {Message} from 'discord.js';
 import {dic as language, replaceArgs} from '../../misc/languageHandler.js';
 
