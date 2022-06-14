@@ -6,7 +6,9 @@ export default class TwoWayMap<K, V>{
     this.reverseMap = new Map();
     for(const key of map.keys()) {
       const value = map.get(key);
-      this.reverseMap.set(value, key);
+      if(value) {
+        this.reverseMap.set(value, key);
+      }
     }
   }
   set(key: K, value: V) {
@@ -33,4 +35,22 @@ export default class TwoWayMap<K, V>{
     }
     return undefined;
   }
+}import { ButtonInteraction } from "discord.js";
+
+abstract class ButtonInteractionHandle {
+  public id: string;
+  constructor(id: string) {
+    this.id = id;
+  }
+
+  public async handle(interaction: ButtonInteraction) {
+    // set interaction as handled
+    setTimeout(async ()=> {
+      try {
+        await interaction.deferUpdate()
+      } catch {}
+    }, 2000);
+  }
 }
+
+export {ButtonInteractionHandle}

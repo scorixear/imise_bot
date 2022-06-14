@@ -1,4 +1,4 @@
-import {Guild, Message, MessageActionRow, MessageEmbed, TextBasedChannels, User} from 'discord.js';
+import {Guild, Message, MessageActionRow, MessageEmbed, TextBasedChannel, TextChannel, User, UserResolvable} from 'discord.js';
 
 /**
  * Prints a MessageEmbed
@@ -20,9 +20,9 @@ import {Guild, Message, MessageActionRow, MessageEmbed, TextBasedChannels, User}
 /**
  * Prints a Message Embed
  */
-async function sendRichTextDefaultExplicit(param0: {
-  guild?: Guild,
-  channel: TextBasedChannels,
+ async function sendRichTextDefaultExplicit(param0: {
+  guild: Guild | null,
+  channel: TextBasedChannel,
   author?: User,
   title?: string,
   categories?: {title: string, text?: string, inline?: boolean}[],
@@ -48,7 +48,7 @@ async function sendRichTextDefaultExplicit(param0: {
  * @param url an url
  * @param buttons
  */
-async function sendRichTextExplicit(guild: Guild, channel: TextBasedChannels, author: User, title: string, categories: {title: string, text?: string, inline?: boolean}[], color: number, description: string, thumbnail: string, url: string, components: MessageActionRow[]) {
+ async function sendRichTextExplicit(guild: Guild | null, channel: TextBasedChannel, author?: User, title?: string, categories?: {title: string, text?: string, inline?: boolean}[], color?: number, description?: string, thumbnail?: string, url?: string, components?: MessageActionRow[]) {
   channel.sendTyping();
   const richText: MessageEmbed = new MessageEmbed();
   if (title) {
@@ -72,7 +72,7 @@ async function sendRichTextExplicit(guild: Guild, channel: TextBasedChannels, au
 
   if (guild && author) {
     const guildMember = await guild.members.fetch(author);
-    richText.setFooter(guildMember.nickname?guildMember.nickname.toString():guildMember.user.username.toString(), author.avatarURL());
+    richText.setFooter({text: guildMember.nickname?guildMember.nickname.toString():guildMember.user.username.toString(), iconURL: author.avatarURL()??""});
   }
 
   richText.setTimestamp(new Date());
@@ -103,7 +103,7 @@ async function getRichTextExplicitDefault(param0: {
   return getRichTextExplicit(param0.guild, param0.author, param0.title, param0.categories, param0.color, param0.description, param0.thumbnail, param0.url, param0.components);
 }
 
-async function getRichTextExplicit(guild: Guild, author: User, title: string, categories: {title: string, text?: string, inline?: boolean}[], color: number, description: string, thumbnail: string, url: string, components: MessageActionRow[]) {
+async function getRichTextExplicit(guild?: Guild, author?: User, title?: string, categories?: {title: string, text?: string, inline?: boolean}[], color?: number, description?: string, thumbnail?: string, url?: string, components?: MessageActionRow[]) {
   const richText: MessageEmbed = new MessageEmbed();
   if (title) {
     richText.setTitle(title);
@@ -126,7 +126,7 @@ async function getRichTextExplicit(guild: Guild, author: User, title: string, ca
 
   if (guild && author) {
     const guildMember = await guild.members.fetch(author);
-    richText.setFooter(guildMember.nickname?guildMember.nickname.toString():guildMember.user.username.toString(), author.avatarURL());
+    richText.setFooter({text: guildMember.nickname?guildMember.nickname.toString():guildMember.user.username.toString()??"", iconURL: author.avatarURL()??""});
   }
 
   richText.setTimestamp(new Date());
@@ -154,7 +154,7 @@ async function getRichTextExplicit(guild: Guild, author: User, title: string, ca
  * @param url
  * @param buttons
  */
-async function sendRichText(msg: Message, title: string, categories: {title: string, text?: string, inline?: boolean}[], color: number, description: string, thumbnail: string, url: string, components: MessageActionRow[]) {
+async function sendRichText(msg: Message, title?: string, categories?: {title: string, text?: string, inline?: boolean}[], color?: number, description?: string, thumbnail?: string, url?: string, components?: MessageActionRow[]) {
   return await sendRichTextExplicit(msg.guild, msg.channel, msg.author,
       title, categories, color, description, thumbnail, url, components);
 }
@@ -165,5 +165,5 @@ export default {
   sendRichTextDefault,
   sendRichTextDefaultExplicit,
   getRichTextExplicit,
-  getRichTextExplicitDefault,
+  getRichTextExplicitDefault
 };

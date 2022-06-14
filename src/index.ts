@@ -1,8 +1,9 @@
-import DiscordHandler from './misc/discordHandler';
+
 import SqlHandler from './misc/sqlHandler';
 import InteractionHandler from './misc/interactionHandler';
-import dotenv from 'dotenv';
 import { LanguageHandler } from './misc/languageHandler';
+import dotenv from 'dotenv';
+import DiscordHandler from './misc/discordHandler';
 
 dotenv.config();
 
@@ -16,8 +17,9 @@ global.languageHandler = new LanguageHandler();
 global.discordHandler = new DiscordHandler();
 global.sqlHandler = new SqlHandler();
 global.interactionHandler = new InteractionHandler();
+global.languageHandler = new LanguageHandler();
 
-discordHandler.client.on('interactionCreate', (interaction) => interactionHandler.handle(interaction));
+discordHandler.on('interactionCreate', (interaction) => interactionHandler.handle(interaction));
 
 
 process.on('uncaughtException', (err: Error) => {
@@ -29,7 +31,7 @@ process.on('unhandledRejection', (reason) => {
 
 
 sqlHandler.initDB().then(async ()=> {
-  await discordHandler.client.login(process.env.DISCORD_TOKEN);
+  await discordHandler.login(process.env.DISCORD_TOKEN??"");
   await interactionHandler.Init();
   console.log('Imise Bot live!')
 });

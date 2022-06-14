@@ -1,4 +1,5 @@
 import mariadb from 'mariadb';
+import config from '../config';
 
 export default class SqlHandler {
   private pool: mariadb.Pool;
@@ -7,7 +8,7 @@ export default class SqlHandler {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      port: parseInt(process.env.DB_PORT, 10),
+      port: parseInt(process.env.DB_PORT??"3306", 10),
       database: process.env.DB_DATABASE,
       multipleStatements: true,
       connectionLimit: 5,
@@ -26,7 +27,7 @@ export default class SqlHandler {
     } catch (error) {
       throw error;
     } finally {
-      if (conn) conn.end();
+      if (conn) await conn.end();
     }
   }
 
