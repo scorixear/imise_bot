@@ -1,18 +1,17 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from 'discord-api-types/v9'
 import { CommandInteraction, Interaction } from "discord.js";
+import AddBotChannelCommand from "../commands/Moderation/addBotChannel";
+import RemoveBotChannelCommand from "../commands/Moderation/removeBotChannel";
 import { CommandInteractionHandle } from "../model/CommandInteractionHandle";
 
 export default class InteractionHandler {
   public commandInteractions: CommandInteractionHandle[];
   constructor() {
-    const help = new Help();
     this.commandInteractions = [
-      new AddBotChannel(),
-      new RemoveBotChannel(),
-      help
+      new AddBotChannelCommand(),
+      new RemoveBotChannelCommand()
     ];
-    help.init(this.commandInteractions);
   }
 
   public async Init() {

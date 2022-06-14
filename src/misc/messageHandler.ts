@@ -1,4 +1,4 @@
-import {DMChannel, Guild, Message, MessageActionRow, MessageEmbed, TextBasedChannel, TextChannel, User, UserResolvable} from 'discord.js';
+import {Guild, Message, MessageActionRow, MessageEmbed, TextBasedChannel, TextChannel, User, UserResolvable} from 'discord.js';
 
 /**
  * Prints a MessageEmbed
@@ -164,4 +164,6 @@ export default {
   sendRichTextExplicit,
   sendRichTextDefault,
   sendRichTextDefaultExplicit,
+  getRichTextExplicit,
+  getRichTextExplicitDefault
 };

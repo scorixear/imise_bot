@@ -20,6 +20,7 @@ export default class DiscordHandler {
                 break;
               }
             }
+            await oldUserChannel.delete();
           }
         }
         if (newUserChannel) {

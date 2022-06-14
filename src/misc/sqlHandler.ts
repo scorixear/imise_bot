@@ -5,11 +5,11 @@ export default class SqlHandler {
   private pool: mariadb.Pool;
   constructor() {
     this.pool = mariadb.createPool({
-      host: config.dbhost,
-      user: config.dbuser,
-      password: config.dbpassword,
-      port: config.dbport,
-      database: config.dbDataBase,
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      port: parseInt(process.env.DB_PORT, 10),
+      database: process.env.DB_DATABASE,
       multipleStatements: true,
       connectionLimit: 5,
     });
@@ -21,7 +21,6 @@ export default class SqlHandler {
   public async initDB() {
     let conn;
     try {
-      console.log('Start DB Connection');
       conn = await this.pool.getConnection();
       console.log('DB Connection established');
       await conn.query('CREATE TABLE IF NOT EXISTS `channels` (`id` VARCHAR(255), `replacement` VARCHAR(255), PRIMARY KEY (`id`))');

@@ -3,7 +3,7 @@ import fs from 'fs';
 export class LanguageHandler {
   public language: {[key: string]: any};
   constructor() {
-    this.language = JSON.parse(fs.readFileSync(`./src/assets/en_EN.json`).toString());
+    this.language = JSON.parse(fs.readFileSync(`./src/assets/de_DE.json`).toString());
   }
 
   /**
