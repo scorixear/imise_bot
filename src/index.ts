@@ -13,7 +13,6 @@ declare global {
   var interactionHandler: InteractionHandler;
   var languageHandler: LanguageHandler;
 }
-global.languageHandler = new LanguageHandler();
 global.discordHandler = new DiscordHandler();
 global.sqlHandler = new SqlHandler();
 global.interactionHandler = new InteractionHandler();
