@@ -1,25 +1,23 @@
-import SqlHandler from "../../misc/sqlHandler";
-import { LanguageHandler } from "../../misc/languageHandler";
+import SqlHandler from "../../handlers/sqlHandler";
+import { LanguageHandler } from "../../handlers/LanguageHandler";
 import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
 import { SlashCommandChannelOption, SlashCommandStringOption } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import messageHandler from '../../misc/messageHandler';
+import messageHandler from '../../handlers/messageHandler';
 import { ChannelType } from "discord-api-types/v10";
 
-
-declare const languageHandler: LanguageHandler;
 declare const sqlHandler: SqlHandler;
 
 export default class AddBotChannelCommand extends CommandInteractionHandle {
   constructor() {
     const commandOptions: any[] = [];
-    const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption().setName('channel').setDescription(languageHandler.language.commands.addBotChannel.options.channel).setRequired(true);
+    const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption().setName('channel').setDescription(LanguageHandler.language.commands.addBotChannel.options.channel).setRequired(true);
     channelOption.addChannelTypes(ChannelType.GuildVoice);
     commandOptions.push(channelOption);
-    commandOptions.push(new SlashCommandStringOption().setName('channel_names').setDescription(languageHandler.language.commands.addBotChannel.options.channel_names).setRequired(true));
+    commandOptions.push(new SlashCommandStringOption().setName('channel_names').setDescription(LanguageHandler.language.commands.addBotChannel.options.channel_names).setRequired(true));
     super(
       'addchannel',
-      () => languageHandler.language.commands.addBotChannel.description,
+      () => LanguageHandler.language.commands.addBotChannel.description,
       'addchannel #general general-$',
       'Moderation',
       'addchannel <#channel-name> <channel-names>',
@@ -41,7 +39,7 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
       interaction.reply(await messageHandler.getRichTextExplicitDefault({
         guild: interaction.guild??undefined,
         author: interaction.user,
-        title: languageHandler.language.commands.addBotChannel.usageTitle,
+        title: LanguageHandler.language.commands.addBotChannel.error.usageTitle,
         description: this.usage,
         color: 0xcc0000,
       }));
@@ -51,7 +49,7 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
       interaction.reply(await messageHandler.getRichTextExplicitDefault({
         guild: interaction.guild??undefined,
         author: interaction.user,
-        title: languageHandler.language.commands.addBotChannel.error.usageTitle,
+        title: LanguageHandler.language.commands.addBotChannel.error.usageTitle,
         description: this.usage,
         color: 0xcc0000,
       }));
@@ -62,8 +60,8 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
       interaction.reply(await messageHandler.getRichTextExplicitDefault({
         guild: interaction.guild??undefined,
         author: interaction.user,
-        title: languageHandler.language.commands.addBotChannel.error.sqlTitle,
-        description: languageHandler.language.commands.addBotChannel.error.sqlDescription,
+        title: LanguageHandler.language.commands.addBotChannel.error.sqlTitle,
+        description: LanguageHandler.language.commands.addBotChannel.error.sqlDescription,
         color: 0xcc0000,
       }));
       return;
@@ -72,8 +70,8 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
     interaction.reply(await messageHandler.getRichTextExplicitDefault({
       guild: interaction.guild??undefined,
       author: interaction.user,
-      title: languageHandler.language.commands.addBotChannel.labels.success,
-      description: languageHandler.replaceArgs(languageHandler.language.commands.addBotChannel.labels.description, [channel?.name??"", channelNames]),
+      title: LanguageHandler.language.commands.addBotChannel.labels.success,
+      description: LanguageHandler.replaceArgs(LanguageHandler.language.commands.addBotChannel.labels.description, [channel?.name??"", channelNames]),
     }));
   }
 }
