@@ -4,6 +4,7 @@ import { ChatInputCommandInteraction, Interaction } from "discord.js";
 import AddBotChannelCommand from "../commands/Moderation/addBotChannel";
 import RemoveBotChannelCommand from "../commands/Moderation/removeBotChannel";
 import { CommandInteractionHandle } from "../model/CommandInteractionHandle";
+import { Logger, WARNINGLEVEL } from "../helpers/logger";
 
 export default class InteractionHandler {
   public commandInteractions: CommandInteractionHandle[];
@@ -25,7 +26,7 @@ export default class InteractionHandler {
 
     global.discordHandler.getGuilds().forEach(async guild => {
       await rest.put(Routes.applicationGuildCommands(process.env.CLIENTID??"", guild.id), {body: commands});
-      console.log('Successfully registered application command for guild', guild.id);
+      Logger.Log("Successfully registered application commands for guild", WARNINGLEVEL.INFO, guild.name);
     })
   }
 
@@ -41,7 +42,7 @@ export default class InteractionHandler {
         return;
       }
     } catch (err) {
-      console.error('Error handling Interaction', err);
+      Logger.Error("Error handling Interaction", err, WARNINGLEVEL.ERROR);
     }
   }
 }

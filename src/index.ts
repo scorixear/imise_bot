@@ -2,6 +2,7 @@ import SqlHandler from './handlers/sqlHandler';
 import InteractionHandler from './handlers/interactionHandler';
 import dotenv from 'dotenv';
 import DiscordHandler from './handlers/discordHandler';
+import {Logger, WARNINGLEVEL} from './helpers/logger';
 
 dotenv.config();
 
@@ -18,15 +19,15 @@ discordHandler.on('interactionCreate', (interaction) => interactionHandler.handl
 
 
 process.on('uncaughtException', (err: Error) => {
-  console.error('Unhandled exception', err);
+  Logger.Error('Uncaught Exception', err, WARNINGLEVEL.ERROR);
 });
 process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection', reason);
+  Logger.Error('Unhandled Rejection', reason, WARNINGLEVEL.ERROR);
 });
 
 
 sqlHandler.initDB().then(async ()=> {
   await discordHandler.login(process.env.DISCORD_TOKEN??"");
   await interactionHandler.Init();
-  console.log('Imise Bot live!')
+  Logger.Log("Bot is ready", WARNINGLEVEL.INFO);
 });

@@ -1,5 +1,5 @@
 import mariadb from 'mariadb';
-import config from '../config';
+import { Logger, WARNINGLEVEL } from '../helpers/logger';
 
 export default class SqlHandler {
   private pool: mariadb.Pool;
@@ -22,7 +22,7 @@ export default class SqlHandler {
     let conn;
     try {
       conn = await this.pool.getConnection();
-      console.log('DB Connection established');
+      Logger.Log("DB Connection established", WARNINGLEVEL.INFO);
       await conn.query('CREATE TABLE IF NOT EXISTS `channels` (`id` VARCHAR(255), `replacement` VARCHAR(255), PRIMARY KEY (`id`))');
     } catch (error) {
       throw error;
@@ -44,7 +44,7 @@ export default class SqlHandler {
       }
     } catch (err) {
       returnValue = false;
-      console.error(err);
+      Logger.Error('Error while saving channel', err, WARNINGLEVEL.ERROR);
     } finally {
       if (conn) await conn.end();
     }
@@ -59,7 +59,7 @@ export default class SqlHandler {
       await conn.query(`DELETE FROM channels WHERE id = ${conn.escape(channelId)}`);
     } catch (err) {
       returnValue = false;
-      console.error(err);
+      Logger.Error('Error while removing channel', err, WARNINGLEVEL.ERROR);
     } finally {
       if (conn) conn.end();
     }
@@ -67,7 +67,7 @@ export default class SqlHandler {
   }
 
   /**
-   * finds a Channel in the database by id
+   * Finds a Channel in the database by id
    * @param {String} channelId channel id
    */
   public async findChannel(channelId: string) {
@@ -80,7 +80,7 @@ export default class SqlHandler {
         returnValue = rows[0].replacement;
       }
     } catch (err) {
-      throw err;
+      Logger.Error('Error while finding channel', err, WARNINGLEVEL.ERROR);
     } finally {
       if (conn) conn.end();
     }
