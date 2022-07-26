@@ -1,5 +1,5 @@
 import SqlHandler from "../../handlers/sqlHandler";
-import { LanguageHandler } from "../../handlers/LanguageHandler";
+import { LanguageHandler } from "../../handlers/languageHandler";
 import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
 import { ChatInputCommandInteraction, CommandInteraction, SlashCommandChannelOption } from "discord.js";
 import messageHandler from '../../handlers/messageHandler';
