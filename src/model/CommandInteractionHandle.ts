@@ -1,6 +1,4 @@
-import { SlashCommandIntegerOption, SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandChannelOption, SlashCommandStringOption, SlashCommandUserOption } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, GuildMemberRoleManager, Role } from "discord.js";
-import config from '../config';
+import { CommandInteraction, GuildMember, SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandStringOption, SlashCommandUserOption } from 'discord.js';
 
 abstract class CommandInteractionHandle {
   public command: string;
@@ -40,6 +38,11 @@ abstract class CommandInteractionHandle {
   }
 
   public async handle(interaction: CommandInteraction) {
+    setTimeout(()=>{
+      if(!interaction.replied) {
+        interaction.deferReply();
+      }
+    },2000);
     if(this.requirePermissions) {
       const guild = interaction.guild;
       if (guild) {

@@ -1,8 +1,7 @@
 import SqlHandler from "../../handlers/sqlHandler";
 import { LanguageHandler } from "../../handlers/LanguageHandler";
 import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
-import { SlashCommandChannelOption, SlashCommandStringOption } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, SlashCommandChannelOption, SlashCommandStringOption } from "discord.js";
 import messageHandler from '../../handlers/messageHandler';
 import { ChannelType } from "discord-api-types/v10";
 
@@ -26,7 +25,7 @@ export default class AddBotChannelCommand extends CommandInteractionHandle {
     );
   }
 
-  override async handle(interaction: CommandInteraction) {
+  override async handle(interaction: ChatInputCommandInteraction) {
     try {
       await super.handle(interaction);
     } catch(err) {

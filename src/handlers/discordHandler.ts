@@ -1,11 +1,12 @@
-import {Client, Guild, Intents, Awaitable, VoiceBasedChannel} from 'discord.js';
+import {Client, GatewayIntentBits, Awaitable, VoiceBasedChannel, Partials, ChannelType} from 'discord.js';
 export default class DiscordHandler {
   private client: Client;
   private tempChannels: VoiceBasedChannel[];
   constructor() {
     this.client = new Client({
-      partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER'],
-      intents: [Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILDS]});
+      partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User],
+      intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.Guilds]
+    });
     this.tempChannels = []
     this.client.on('voiceStateUpdate', async (newVoice, oldVoice) => {
       const newUserChannel = oldVoice.channel;
@@ -30,8 +31,9 @@ export default class DiscordHandler {
             while (newVoice.guild.channels.cache.find((c) => c.name === replacement.replace('$', counter))) {
               counter++;
             }
-            const channel = await newVoice.guild.channels.create(replacement.replace('$', counter), {
-              type: 'GUILD_VOICE',
+            const channel = await newVoice.guild.channels.create({
+              name: replacement.replace('$', counter),
+              type: ChannelType.GuildVoice,
               parent: newUserChannel.parent??undefined,
               position: newUserChannel.position + 1,
             });

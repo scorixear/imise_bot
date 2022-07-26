@@ -1,9 +1,7 @@
-
-import SqlHandler from './misc/sqlHandler';
-import InteractionHandler from './misc/interactionHandler';
-import { LanguageHandler } from './misc/languageHandler';
+import SqlHandler from './handlers/sqlHandler';
+import InteractionHandler from './handlers/interactionHandler';
 import dotenv from 'dotenv';
-import DiscordHandler from './misc/discordHandler';
+import DiscordHandler from './handlers/discordHandler';
 
 dotenv.config();
 
@@ -11,12 +9,10 @@ declare global {
   var discordHandler: DiscordHandler;
   var sqlHandler: SqlHandler;
   var interactionHandler: InteractionHandler;
-  var languageHandler: LanguageHandler;
 }
 global.discordHandler = new DiscordHandler();
 global.sqlHandler = new SqlHandler();
 global.interactionHandler = new InteractionHandler();
-global.languageHandler = new LanguageHandler();
 
 discordHandler.on('interactionCreate', (interaction) => interactionHandler.handle(interaction));
 

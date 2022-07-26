@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
-import { Routes } from 'discord-api-types/v9'
-import { CommandInteraction, Interaction } from "discord.js";
+import { Routes } from 'discord-api-types/v10'
+import { ChatInputCommandInteraction, Interaction } from "discord.js";
 import AddBotChannelCommand from "../commands/Moderation/addBotChannel";
 import RemoveBotChannelCommand from "../commands/Moderation/removeBotChannel";
 import { CommandInteractionHandle } from "../model/CommandInteractionHandle";
@@ -31,8 +31,8 @@ export default class InteractionHandler {
 
   public async handle(interaction: Interaction) {
     try {
-      if (interaction.isCommand()) {
-        const commandInteraction: CommandInteraction = interaction as CommandInteraction;
+      if (interaction.isChatInputCommand()) {
+        const commandInteraction: ChatInputCommandInteraction = interaction as ChatInputCommandInteraction;
         const handler = this.commandInteractions.find(interactionHandle => interactionHandle.command === commandInteraction.commandName);
         if (handler) {
           await handler.handle(commandInteraction);

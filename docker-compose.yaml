@@ -9,13 +9,14 @@ networks:
         driver: bridge
 
 services:
-  mariadb:
-    image: mariadb:10.6
+  mysql:
+    image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER:  user
       MYSQL_PASSWORD: password
+      MYSQL_DATABASE: imise
     expose:
         - "40000"
     ports:
@@ -33,7 +34,7 @@ services:
     ports:
       - "40001:80"
     environment:
-      - PMA_HOST=mariadb
+      - PMA_HOST=mysql
       - PMA_PORT=3306
     networks:
       db:

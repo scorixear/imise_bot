@@ -1,8 +1,7 @@
 import SqlHandler from "../../handlers/sqlHandler";
 import { LanguageHandler } from "../../handlers/LanguageHandler";
 import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
-import { SlashCommandChannelOption } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, SlashCommandChannelOption } from "discord.js";
 import messageHandler from '../../handlers/messageHandler';
 import { ChannelType } from "discord-api-types/v10";
 
@@ -25,7 +24,7 @@ export default class RemoveBotChannelCommand extends CommandInteractionHandle {
     );
   }
 
-  override async handle(interaction: CommandInteraction) {
+  override async handle(interaction: ChatInputCommandInteraction) {
     try {
       await super.handle(interaction);
     } catch(err) {
