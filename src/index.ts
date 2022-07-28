@@ -5,6 +5,7 @@ import { DiscordHandler, InteractionHandler, Logger, TwoWayMap, WARNINGLEVEL } f
 import { GatewayIntentBits, Partials } from 'discord.js';
 import AddBotChannelCommand from './commands/Moderation/addBotChannel';
 import RemoveBotChannelCommand from './commands/Moderation/removeBotChannel';
+import VoiceEventHandler from './handlers/voiceEventHandler';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ global.interactionHandler = new InteractionHandler(
 );
 
 discordHandler.on('interactionCreate', (interaction) => interactionHandler.handle(interaction));
+discordHandler.on('voiceStateUpdate', VoiceEventHandler.handleVoiceStateUpdate);
 
 process.on('uncaughtException', (err: Error) => {
   Logger.exception('Uncaught Exception', err, WARNINGLEVEL.ERROR);
