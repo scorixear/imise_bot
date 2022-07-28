@@ -33,7 +33,6 @@ global.interactionHandler = new InteractionHandler(
 );
 
 discordHandler.on('interactionCreate', (interaction) => interactionHandler.handle(interaction));
-VoiceEventHandler.tempChannels = [];
 discordHandler.on('voiceStateUpdate', VoiceEventHandler.handleVoiceStateUpdate);
 
 process.on('uncaughtException', (err: Error) => {
