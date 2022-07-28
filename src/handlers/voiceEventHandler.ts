@@ -1,6 +1,6 @@
 import { VoiceBasedChannel, ChannelType, VoiceState, GuildBasedChannel } from 'discord.js';
 export default class VoiceEventHandler {
-  private static tempChannels: VoiceBasedChannel[] = [];
+  public static tempChannels: VoiceBasedChannel[];
   public static async handleVoiceStateUpdate(newVoice: VoiceState, oldVoice: VoiceState) {
     const newUserChannel = oldVoice.channel;
     const oldUserChannel = newVoice.channel;
