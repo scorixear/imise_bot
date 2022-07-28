@@ -33,7 +33,7 @@ export default class VoiceEventHandler {
             position: newUserChannel.position + 1
           });
           channel.permissionOverwrites.set(newUserChannel.permissionOverwrites.cache);
-          this.tempChannels.push(channel);
+          VoiceEventHandler.tempChannels.push(channel);
           newVoice.setChannel(channel);
         }
       }
