@@ -1,58 +1,55 @@
-import SqlHandler from "../../misc/sqlHandler";
-import { LanguageHandler } from "../../misc/languageHandler";
-import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
-import { SlashCommandChannelOption } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
-import messageHandler from '../../misc/messageHandler';
-import { ChannelType } from "discord-api-types/v10";
+import SqlHandler from '../../handlers/sqlHandler';
+import { LanguageHandler } from '../../handlers/languageHandler';
+import { ChatInputCommandInteraction, SlashCommandChannelOption } from 'discord.js';
+import { ChannelType } from 'discord-api-types/v10';
+import { CommandInteractionModel, MessageHandler } from 'discord.ts-architecture';
 
-
-
-declare const languageHandler: LanguageHandler;
 declare const sqlHandler: SqlHandler;
 
-export default class RemoveBotChannelCommand extends CommandInteractionHandle {
+export default class RemoveBotChannelCommand extends CommandInteractionModel {
   constructor() {
     const commandOptions: any[] = [];
-    const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption().setName('channel').setDescription(languageHandler.language.commands.addBotChannel.options.channel).setRequired(true);
+    const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption()
+      .setName('channel')
+      .setDescription(LanguageHandler.language.commands.addBotChannel.options.channel)
+      .setRequired(true);
     channelOption.addChannelTypes(ChannelType.GuildVoice);
     commandOptions.push(channelOption);
     super(
       'removechannel',
-      () => languageHandler.language.commands.removeBotChannel.description,
+      LanguageHandler.language.commands.removeBotChannel.description,
       'removechannel #general',
       'Moderation',
       'removechannel <#channel-name>',
-      commandOptions,
-      false,
+      commandOptions
     );
   }
 
-  override async handle(interaction: CommandInteraction) {
+  override async handle(interaction: ChatInputCommandInteraction) {
     try {
       await super.handle(interaction);
-    } catch(err) {
+    } catch (err) {
       return;
     }
 
     const channel = interaction.options.getChannel('channel');
 
-    if (!await sqlHandler.removeChannel(channel?.id??"")) {
-      interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild??undefined,
-        author: interaction.user,
-        title: languageHandler.language.commands.removeBotChannel.sqlError,
-        description: languageHandler.language.commands.removeBotChannel.sqlErrorDescription,
-        color: 0xcc0000,
-      }));
+    if (!(await sqlHandler.removeChannel(channel?.id ?? ''))) {
+      await MessageHandler.replyError({
+        interaction,
+        title: LanguageHandler.language.commands.removeBotChannel.error.sqlTitle,
+        description: LanguageHandler.language.commands.removeBotChannel.error.sqlDescription,
+        color: 0xcc0000
+      });
       return;
     }
 
-    interaction.reply(await messageHandler.getRichTextExplicitDefault({
-      guild: interaction.guild??undefined,
-      author: interaction.user,
-      title: languageHandler.language.commands.removeBotChannel.labels.success,
-      description: languageHandler.replaceArgs(languageHandler.language.commands.removeBotChannel.labels.description, [channel?.name??""]),
-    }));
+    await MessageHandler.reply({
+      interaction,
+      title: LanguageHandler.language.commands.removeBotChannel.labels.success,
+      description: LanguageHandler.replaceArgs(LanguageHandler.language.commands.removeBotChannel.labels.description, [
+        channel?.name ?? ''
+      ])
+    });
   }
 }

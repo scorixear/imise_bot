@@ -1,79 +1,71 @@
-import SqlHandler from "../../misc/sqlHandler";
-import { LanguageHandler } from "../../misc/languageHandler";
-import { CommandInteractionHandle } from "../../model/CommandInteractionHandle";
-import { SlashCommandChannelOption, SlashCommandStringOption } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
-import messageHandler from '../../misc/messageHandler';
-import { ChannelType } from "discord-api-types/v10";
+import SqlHandler from '../../handlers/sqlHandler';
+import { LanguageHandler } from '../../handlers/languageHandler';
+import { ChatInputCommandInteraction, SlashCommandChannelOption, SlashCommandStringOption } from 'discord.js';
+import { ChannelType } from 'discord-api-types/v10';
+import { CommandInteractionModel, MessageHandler } from 'discord.ts-architecture';
 
-
-declare const languageHandler: LanguageHandler;
 declare const sqlHandler: SqlHandler;
 
-export default class AddBotChannelCommand extends CommandInteractionHandle {
+export default class AddBotChannelCommand extends CommandInteractionModel {
   constructor() {
     const commandOptions: any[] = [];
-    const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption().setName('channel').setDescription(languageHandler.language.commands.addBotChannel.options.channel).setRequired(true);
+    const channelOption: SlashCommandChannelOption = new SlashCommandChannelOption()
+      .setName('channel')
+      .setDescription(LanguageHandler.language.commands.addBotChannel.options.channel)
+      .setRequired(true);
     channelOption.addChannelTypes(ChannelType.GuildVoice);
     commandOptions.push(channelOption);
-    commandOptions.push(new SlashCommandStringOption().setName('channel_names').setDescription(languageHandler.language.commands.addBotChannel.options.channel_names).setRequired(true));
+    commandOptions.push(
+      new SlashCommandStringOption()
+        .setName('channel_names')
+        .setDescription(LanguageHandler.language.commands.addBotChannel.options.channel_names)
+        .setRequired(true)
+    );
     super(
       'addchannel',
-      () => languageHandler.language.commands.addBotChannel.description,
+      LanguageHandler.language.commands.addBotChannel.description,
       'addchannel #general general-$',
       'Moderation',
       'addchannel <#channel-name> <channel-names>',
-      commandOptions,
-      true,
+      commandOptions
     );
   }
 
-  override async handle(interaction: CommandInteraction) {
+  override async handle(interaction: ChatInputCommandInteraction) {
     try {
       await super.handle(interaction);
-    } catch(err) {
+    } catch (err) {
       return;
     }
-    const channel = interaction.options.getChannel('channel');
-    const channelNames = interaction.options.getString('channel_names');
-
-    if (!channelNames) {
-      interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild??undefined,
-        author: interaction.user,
-        title: languageHandler.language.commands.addBotChannel.usageTitle,
-        description: this.usage,
-        color: 0xcc0000,
-      }));
-      return;
-    }
+    const channel = interaction.options.getChannel('channel', true);
+    const channelNames = interaction.options.getString('channel_names', true);
     if (!channelNames.includes('$')) {
-      interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild??undefined,
-        author: interaction.user,
-        title: languageHandler.language.commands.addBotChannel.error.usageTitle,
+      await MessageHandler.replyError({
+        interaction,
+        title: LanguageHandler.language.commands.addBotChannel.error.usageTitle,
         description: this.usage,
-        color: 0xcc0000,
-      }));
+        color: 0xcc0000
+      });
       return;
     }
 
-    if (!await sqlHandler.saveChannel(channel?.id??"", channelNames)) {
-      interaction.reply(await messageHandler.getRichTextExplicitDefault({
-        guild: interaction.guild??undefined,
-        author: interaction.user,
-        title: languageHandler.language.commands.addBotChannel.error.sqlTitle,
-        description: languageHandler.language.commands.addBotChannel.error.sqlDescription,
-        color: 0xcc0000,
-      }));
+    if (!(await sqlHandler.saveChannel(channel?.id ?? '', channelNames))) {
+      MessageHandler.replyError({
+        interaction,
+        title: LanguageHandler.language.commands.addBotChannel.error.sqlTitle,
+        description: LanguageHandler.language.commands.addBotChannel.error.sqlDescription,
+        color: 0xcc0000
+      });
       return;
     }
 
-    interaction.reply(await messageHandler.getRichTextExplicitDefault({
-      guild: interaction.guild??undefined,
-      author: interaction.user,
-      title: languageHandler.language.commands.addBotChannel.labels.success,
-      description: languageHandler.replaceArgs(languageHandler.language.commands.addBotChannel.labels.description, [channel?.name??"", channelNames]),
-    }));
+    await MessageHandler.reply({
+      interaction,
+      title: LanguageHandler.language.commands.addBotChannel.labels.success,
+      description: LanguageHandler.replaceArgs(LanguageHandler.language.commands.addBotChannel.labels.description, [
+        channel?.name ?? '',
+        channelNames
+      ])
+    });
   }
 }

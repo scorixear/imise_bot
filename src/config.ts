@@ -1,6 +1,10 @@
 import fs from 'fs';
 
-const config = JSON.parse(fs.readFileSync('./src/config.json').toString());
-config.version = JSON.parse(fs.readFileSync('package.json').toString()).version;
+const version = JSON.parse(fs.readFileSync('package.json').toString()).version;
 
-export default config;
+export default {
+  repository: 'https://github.com/scorixear/imise_bot',
+  botPrefix: '/',
+  version,
+  adminRoles: ['unsuspicious Role', '💻Entwickler💻', '👑Monarch👑']
+};
