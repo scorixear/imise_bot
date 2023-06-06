@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 import SqlHandler from './handlers/sqlHandler';
 import dotenv from 'dotenv';
-import { DiscordHandler, InteractionHandler, Logger, TwoWayMap, WARNINGLEVEL } from 'discord.ts-architecture';
+import { DiscordHandler, InteractionHandler, Logger, WARNINGLEVEL } from 'discord.ts-architecture';
 import { GatewayIntentBits, Partials } from 'discord.js';
 import AddBotChannelCommand from './commands/Moderation/addBotChannel';
 import RemoveBotChannelCommand from './commands/Moderation/removeBotChannel';
@@ -25,12 +25,7 @@ global.discordHandler = new DiscordHandler(
 );
 global.sqlHandler = new SqlHandler();
 
-global.interactionHandler = new InteractionHandler(
-  new TwoWayMap(new Map()),
-  [new AddBotChannelCommand(), new RemoveBotChannelCommand()],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  () => {}
-);
+global.interactionHandler = new InteractionHandler([new AddBotChannelCommand(), new RemoveBotChannelCommand()]);
 
 discordHandler.on('interactionCreate', (interaction) => interactionHandler.handle(interaction));
 discordHandler.on('voiceStateUpdate', VoiceEventHandler.handleVoiceStateUpdate);
